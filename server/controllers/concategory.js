@@ -32,7 +32,7 @@ exports.remove = async(req,res)=>{
         //code
 
         const {id} = req.params
-        const category = await prisma.category.delete({
+        const category = await prisma.category.deleteMany({
             where:{
                 id: Number(id)
             }
