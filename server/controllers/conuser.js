@@ -61,6 +61,7 @@ exports.userCart = async (req, res) => {
       where: { id: Number(req.user.id) },
     })
     // console.log(user)
+
     // Deleted old Cart item
     await prisma.productOnCart.deleteMany({
       where: {
@@ -177,76 +178,98 @@ exports.saveAddress = async (req, res) => {
 }
 exports.saveOrder = async (req, res) => {
   try {
-    //code
-    // step 1 Get User cart
+    // Step 1: Get User Cart
     const userCart = await prisma.cart.findFirst({
       where: {
         orderedById: Number(req.user.id),
       },
       include: { products: true },
-    });
+    })
 
-    // Check Cart empty
-
+    // Check if Cart is empty
     if (!userCart || userCart.products.length === 0) {
       return res.status(400).json({ ok: false, message: 'Cart is Empty' })
     }
 
-    // Check quantity
+    // Check product quantity
     for (const item of userCart.products) {
-      // console.log(item)
       const product = await prisma.product.findUnique({
         where: { id: item.productId },
-        select: { quantity: true, title: true }
+        select: { quantity: true, title: true },
       })
-      // console.log(item)
-      // console.log(product)
-      if(!product || item.count > product.quantity){
-        return res.status(400).json({ 
-          ok:false,
-          message: `ขออภัย. สินค้า ${product?.title || 'product'} หมด`
+      if (!product || item.count > product.quantity) {
+        return res.status(400).json({
+          ok: false,
+          message: `ขออภัย. สินค้า ${product?.title || 'product'} หมด`,
         })
       }
     }
 
-    // Create a new Order
+    // Step 2: Calculate `amountTHB` and set currency
+    const amountTHB = userCart.cartTotal // ใช้ cartTotal เป็นจำนวนเงินในคำสั่งซื้อ
+    const currency = 'THB' // สกุลเงินเป็นบาทไทย
+    const status = 'pending' // สถานะของคำสั่งซื้อ
+
+    // Step 3: Create a new Order
     const order = await prisma.order.create({
-      data:{
+      data: {
         products: {
-          create: userCart.products.map((item)=>({
-              productId: item.productId,
-              count: item.count,
-              price: item.price
-          }))
+          create: userCart.products.map((item) => ({
+            productId: item.productId,
+            count: item.count,
+            price: item.price,
+          })),
         },
-        orderedBy:{
-          connect:{ id: req.user.id }
+        orderedBy: {
+          connect: { id: req.user.id },
         },
-        cartTotal: userCart.cartTotal
-      }
+        cartTotal: userCart.cartTotal,
+        stripePaymentId: 'mock_payment_id', // ใช้ mock ค่า stripePaymentId หากยังไม่เชื่อมกับระบบจริง
+        amount: amountTHB,
+        currentcy: currency,
+        status: status, // ส่งค่า string "pending" หรือสถานะอื่นที่ต้องการ
+      },
     })
 
-    // update Product
-    const update = userCart.products.map((item)=>({
-        where: { id: item.productId},
-        data: {
-          quantity: { decrement: item.count },
-          sold: { increment: item.count }
-        }
+    // Step 4: Update Product Stock and Delete User Cart
+    const update = userCart.products.map((item) => ({
+      where: { id: item.productId },
+      data: {
+        quantity: { decrement: item.count },
+        sold: { increment: item.count },
+      },
     }))
 
-    console.log(order)
+    await Promise.all(update.map((updated) => prisma.product.update(updated)))
 
-    res.send('Hello saveOrder')
+    await prisma.cart.deleteMany({
+      where: { orderedById: Number(req.user.id) },
+    })
+
+    res.json({ ok: true, order })
   } catch (err) {
     console.log(err)
-    res.status(500).json({ message: 'server Error' })
+    res.status(500).json({ message: 'Server Error' })
   }
 }
 exports.getOrder = async (req, res) => {
   try {
     //code
-    res.send('Hello getOrder')
+    const orders = await prisma.order.findMany({
+      where: { orderedById: Number(req.user.id) },
+      include: {
+        products: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    })
+    if (orders.length === 0) {
+      return res.status(400).json({ ok: false, message: 'No order' })
+    }
+
+    res.json({ ok: true, orders })
   } catch (err) {
     console.log(err)
     res.status(500).json({ message: 'server Error' })
