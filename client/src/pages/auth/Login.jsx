@@ -4,20 +4,19 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import { data } from 'react-router-dom'
 import useEcomStore from '../../store/ecom-store'
-
+import { useNavigate } from 'react-router-dom'
 
 
 export const Login = () => {
-  //javascript
-  const Pack = useEcomStore()
-  console.log(Pack.name);
-  
-
-
+  // Javascript
+  const navigate = useNavigate();
+  const actionLogin = useEcomStore((state) => state.actionLogin);
+  const user = useEcomStore((state) => state.user);
+  console.log("user form zustand", user);
   const [form, setForm] = useState({
-    email: ' ',
-    password: ' ',
-  })
+    email: "",
+    password: "",
+  });
 
   const handleOnChange = (e) => {
     //code
@@ -29,23 +28,26 @@ export const Login = () => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
-    console.log(form)
-    // Send to Back
-    try {
-      //code
-      const res = await axios.post('http://localhost:5500/api/login', form)
-      
-      
-
-      console.log(res.data)
-      toast.success(res.data)
-    } catch (err) {
-      const errMsg = err.response?.data?.message
+    try{
+      const res = await actionLogin(form)
+      const role = res.data.payload.role
+      roleRedirect(role)
+      toast.success('Welcome Back')
+    }catch(err){
+      console.log(err);
+      const errMsg = err.response?.data?.message;
       toast.error(errMsg)
-      console.log(err)
     }
   }
+
+  const roleRedirect = (role)=>{
+    if(role == 'admin'){
+      navigate('/admin')
+    }else {
+      navigate('/user')
+    }
+  }
+
 
   return (
     <div>

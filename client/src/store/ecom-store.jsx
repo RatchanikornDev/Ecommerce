@@ -1,10 +1,24 @@
+import axios from 'axios'
 import { create } from 'zustand'
-
-const ecomStore = ( )=>({
-    name:'Pack',
-    value:0
+import { persist,createJSONStorage } from 'zustand/middleware'
+const ecomStore = (set)=>({
+    user: null,
+    token: null,
+    actionLogin: async (form)=>{
+      const res = await axios.post('http://localhost:5500/api/login',form)
+        set ({
+            user: res.data.payload,
+            token: res.data.token
+        })
+      return res
+    }
 })
 
-const useEcomStore = create(ecomStore)
+const usePersist = {
+    name: 'ecom-store',
+    storage: createJSONStorage(()=>localStorage)
+}
+
+const useEcomStore = create(persist(ecomStore,usePersist))
 
 export default useEcomStore
