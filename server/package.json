@@ -23,6 +23,7 @@
     "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "mysql2": "^3.11.5",
+    "react-toastify": "^11.0.2",
     "xxx": "^0.0.1"
   },
   "devDependencies": {

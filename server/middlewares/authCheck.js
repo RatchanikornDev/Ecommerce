@@ -5,7 +5,7 @@ exports.authCheck = async(req,res,next)=>{
     try{
         //code
         const headerToken = req.headers.authorization
-        console.log(headerToken)
+        // console.log(headerToken)
         if(!headerToken){
             return res.status(401).json({message: "No Token, Authorization"})
         }
