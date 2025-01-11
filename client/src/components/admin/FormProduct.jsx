@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import useEcomStore from '../../store/ecom-store'
 import { createProduct } from '../../api/product'
 import { toast } from 'react-toastify'
+import Uploadfile from './Uploadfile'
 
 const initialState = {
   title: 'SCREEN',
@@ -15,16 +16,24 @@ const FormProduct = () => {
   const token = useEcomStore((state) => state.token)
   const getCategory = useEcomStore((state) => state.getCategory)
   const categories = useEcomStore((state) => state.categories)
-  const [form, setForm] = useState(initialState)
   const getProduct = useEcomStore((state) => state.getProduct)
   const products = useEcomStore((state) => state.products)
-  console.log(products)
+  // console.log(products)
+
+const [form, setForm] = useState({
+    title: "",
+    description: "",
+    price: 0,
+    quantity: 0,
+    categoryId: "",
+    images: [],
+  });
 
   useEffect(() => {
     //code
     getCategory(token)
-    getProduct(token, 50)
-  }, [])
+    getProduct(token, 20)
+  }, [token, getCategory, getProduct])
 
   const handleOnchange = (e) => {
     console.log(e.target.name, e.target.value)
@@ -67,7 +76,7 @@ const FormProduct = () => {
           className="border"
           value={form.price}
           onChange={handleOnchange}
-          placeholder="Price"
+          placeholder="price"
           name="price"
         />
         <input
@@ -75,7 +84,7 @@ const FormProduct = () => {
           className="border"
           value={form.quantity}
           onChange={handleOnchange}
-          placeholder="Quantity"
+          placeholder="quantity"
           name="quantity"
         />
         <select
@@ -88,13 +97,17 @@ const FormProduct = () => {
           <option value="" disabled>
             Please Select
           </option>
-          {categories.map((item, index) => (
+
+          {categories?.map((item, index) => (
             <option key={index} value={item.id}>
               {item.name}
             </option>
           ))}
         </select>
         <hr />
+          {/* upload file  */}
+          <Uploadfile form={form} setForm={setForm} />
+        
         <button className="bg-slate-900 text-white rounded-md">
           เพิ่มสินค้า
         </button>
@@ -115,10 +128,10 @@ const FormProduct = () => {
             </tr>
           </thead>
           <tbody>
-            {products.map((item, index) => {
-              console.log(item)
+            {products?.map((item, index) => {
+              // console.log(item)
               return (
-                <tr>
+                <tr key={item.id || index} className="hover:bg-gray-50">
                   <th scope="row">{index + 1}</th>
                   <td>{item.title}</td>
                   <td>{item.description}</td>
