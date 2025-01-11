@@ -16,11 +16,24 @@ export const createProduct = async (token, form) => {
       }
     })
   }
+  
   export const uploadFiles = async (token, form) => {
     // code body
     // console.log('form api front', form)
     return axios.post("http://localhost:5500/api/images", {
       image: form
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+  }
+
+  export const removeFiles = async (token, public_id) => {
+    // code body
+    // console.log('form api front', form)
+    return axios.post("http://localhost:5500/api/removeimages", {
+      public_id
     }, {
       headers: {
         Authorization: `Bearer ${token}`

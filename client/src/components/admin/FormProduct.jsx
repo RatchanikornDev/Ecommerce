@@ -32,7 +32,7 @@ const [form, setForm] = useState({
   useEffect(() => {
     //code
     getCategory(token)
-    getProduct(token, 20)
+    getProduct(token, 100)
   }, [token, getCategory, getProduct])
 
   const handleOnchange = (e) => {

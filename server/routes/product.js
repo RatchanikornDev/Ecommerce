@@ -23,4 +23,6 @@ router.post('/search/filters', searchFilters)
 router.post('/images', authCheck, adminCheck, createImages) 
 router.post('/removeimages', authCheck, adminCheck, removeImage)
 
+
+
 module.exports = router
