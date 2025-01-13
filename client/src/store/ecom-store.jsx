@@ -2,13 +2,13 @@ import axios from 'axios'
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { listCategory } from '../api/Category'
-import { listProduct,SearchFilters } from '../api/product'
+import { listProduct, SearchFilters } from '../api/product'
 
 const ecomStore = (set) => ({
   user: null,
   token: null,
   categories: [],
-  products:[],
+  products: [],
   actionLogin: async (form) => {
     const res = await axios.post('http://localhost:5500/api/login', form)
     set({
@@ -28,7 +28,7 @@ const ecomStore = (set) => ({
   getProduct: async (count) => {
     try {
       const res = await listProduct(count)
-      set({products: res.data})
+      set({ products: res.data })
     } catch (err) {
       console.log(err)
     }
