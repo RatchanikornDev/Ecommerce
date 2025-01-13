@@ -118,7 +118,7 @@ const FormEditProduct = () => {
                 {/* Upload file  */}
                 <Uploadfile form={form} setForm={setForm} />
 
-                <button className='bg-blue-500'>แก้ไขสินค้า</button>
+                <button className="bg-sky-800 p-2 text-white rounded-md">แก้ไขสินค้า</button>
 
 
                 <hr />

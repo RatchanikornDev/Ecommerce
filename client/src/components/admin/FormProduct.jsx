@@ -23,12 +23,14 @@ const FormProduct = () => {
   // console.log(products)
 
   const [form, setForm] = useState({
+
     title: '',
     description: '',
     price: 0,
     quantity: 0,
     categoryId: '',
     images: [],
+
   })
 
   useEffect(() => {
@@ -129,15 +131,15 @@ const FormProduct = () => {
         {/* upload file  */}
         <Uploadfile form={form} setForm={setForm} />
 
-        <button className="bg-slate-900 text-white rounded-md">
+        <button className="bg-sky-800 p-2 text-white rounded-md">
           เพิ่มสินค้า
         </button>
 
         <hr />
         <br />
-        <table className="table">
+        <table className="table w-full border" >
           <thead>
-            <tr>
+            <tr className=' bg-gray-200 border'>
               <th scope="col">No.</th>
               <th scope="col">รูปภาพ</th>
               <th scope="col">ชื่อสินค้า</th>
