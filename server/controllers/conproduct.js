@@ -2,7 +2,12 @@ const { query } = require("express");
 const cloudinary = require('cloudinary').v2;
 const prisma = require("../config/prisma")
 
-
+    // Configuration
+    cloudinary.config({ 
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+        api_key: process.env.CLOUDINARY_API_KEY ,
+        api_secret: process.env.CLOUDINARY_API_SECRET ,
+    });
 
 exports.create = async (req, res) => {
     try {
@@ -259,12 +264,7 @@ exports.searchFilters = async (req, res) => {
     }
 }
 
-    // Configuration
-    cloudinary.config({ 
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-        api_key: process.env.CLOUDINARY_API_KEY ,
-        api_secret: process.env.CLOUDINARY_API_SECRET ,
-    });
+
    
 
 exports.createImages = async(req,res) => {

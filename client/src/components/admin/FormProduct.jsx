@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import useEcomStore from '../../store/ecom-store'
-import { createProduct, updateProduct } from '../../api/product'
+import { createProduct, deleteProduct, updateProduct } from '../../api/product'
 import { toast } from 'react-toastify'
 import Uploadfile from './Uploadfile'
 import { Link } from 'react-router-dom'
-import { Pencil } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react'
 
 const initialState = {
-  title: 'SCREEN',
-  description: 'desc',
-  price: 5000,
-  quantity: 5,
-  categoryId: 20,
+  title:"",
+  description: "",
+  price: 0,
+  quantity: 0,
+  categoryId: '',
   images: [],
 }
 const FormProduct = () => {
@@ -47,13 +47,31 @@ const FormProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const res = await createProduct(token,form)
+      const res = await createProduct(token, form)
       console.log(res)
+      setForm(initialState)
+      getProduct(token)
       toast.success(`เพิ่มข้อมูล ${res.data.title} สำเร็จ`)
       navigate('/admin/product')
     } catch (err) {
       console.log(err)
     }
+  }
+
+  const handleDelete = async (id) => {
+    if(window.confirm('คูณแน่ใจจะลบจริงๆใช่ไหม')){
+      try{
+        //code
+        const res = await deleteProduct(token,id)
+        console.log(res)
+        toast.success('Deleted สินค้าเรียบร้อย')
+        getProduct(token)
+      }catch(err){
+          console.log(err);
+        
+        }
+      }
+
   }
 
   return (
@@ -137,27 +155,20 @@ const FormProduct = () => {
               return (
                 <tr key={item.id || index} className="hover:bg-gray-50">
                   <th scope="row">{index + 1}</th>
-                  
-                  
-                  
+
                   <td>
-                    
-                    {
-                      item.images.length > 0
-                      ? <img className='w-24 h-24 rounded-lg shadow-md'
-                      src = {item.images[0].url}/>
-                      :<div
-                      
-                      className='w-24 h-24 bg-gray-200 rounded-md flex item-center justify-center shadow-md'
-                      > No Image</div>
-                      
-                   
-                    }
-
+                    {item.images.length > 0 ? (
+                      <img
+                        className="w-24 h-24 rounded-lg shadow-md"
+                        src={item.images[0].url}
+                      />
+                    ) : (
+                      <div className="w-24 h-24 bg-gray-200 rounded-md flex item-center justify-center shadow-md">
+                        {' '}
+                        No Image
+                      </div>
+                    )}
                   </td>
-
-
-
 
                   <td>{item.title}</td>
                   <td>{item.description}</td>
@@ -165,13 +176,23 @@ const FormProduct = () => {
                   <td>{item.quantity}</td>
                   <td>{item.sold}</td>
                   <td>{item.updatedAt}</td>
-                  <td>
+                  <td className="flex gsp-2">
+
                     <p>
-                      <Link  to={'/admin/product/' + item.id} className=' text-red-500' >
+                      <Link
+                        to={'/admin/product/' + item.id}
+                        className=" text-blue-500"
+                      >
                         <Pencil />
                       </Link>
                     </p>
-                    <p>ลบ</p>
+
+                    <p
+                      onClick={() => handleDelete(item.id)}
+                      className=" text-red-500"
+                    >
+                      <Trash2 />
+                    </p>
                   </td>
                 </tr>
               )

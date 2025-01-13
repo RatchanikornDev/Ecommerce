@@ -27,6 +27,15 @@ export const createProduct = async (token, form) => {
     })
   }
 
+  export const deleteProduct = async (token,id) => {
+    // code body
+    return axios.delete("http://localhost:5500/api/product/" + id, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+  }
+
   export const updateProduct = async (token,id,form) => {
     // code body
     return axios.put("http://localhost:5500/api/product/" + id,form, {
@@ -59,3 +68,4 @@ export const createProduct = async (token, form) => {
       }
     })
   }
+
