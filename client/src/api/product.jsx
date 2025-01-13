@@ -65,3 +65,7 @@ export const createProduct = async (token, form) => {
     })
   }
 
+  export const SearchFilters = async (arg) => {
+    // code body
+    return axios.post("http://localhost:5500/api/search/filters/",arg)
+  }
