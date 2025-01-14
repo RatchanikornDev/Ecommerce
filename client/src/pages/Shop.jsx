@@ -14,7 +14,7 @@ const Shop = () => {
   return (
     <div className="flex">
       {/* {SearchBar} */}
-      <div className="w-1/4 p-4 bg-gray-300 h-screen">
+      <div className="w-1/4 p-4 bg-gray-100 h-screen">
         <SearchCard />
       </div>
 
@@ -32,7 +32,7 @@ const Shop = () => {
 
       {/* {Cart} */}
       <div
-        className="w-1/4 p-4  bg-gray-300 h-screen 
+        className="w-1/4 p-4  bg-gray-100 h-screen 
     overflow-y-auto"
       >
         Cart
