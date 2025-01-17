@@ -52,13 +52,13 @@ const SearchCard = () => {
     }
     setCategorySelected(inState)
 
-    if (inState > 0) {
+    if (inState.length > 0) {
       actionSearchFilters({ category: inState })
     } else {
       getProduct()
     }
   }
-  console.log(categorySelected)
+  // console.log(categorySelected)
 
   // Step 3 Search by Price
   useEffect(()=>{
@@ -89,7 +89,7 @@ const SearchCard = () => {
         <h1>หมวดหมู่สินค้า</h1>
         <div>
           {categories.map((item, index) => (
-            <div className="flex gap-2">
+            <div key={index} className="flex gap-2">
               <input onChange={handleCheck} value={item.id} type="checkbox" />
               <label>{item.name}</label>
             </div>
