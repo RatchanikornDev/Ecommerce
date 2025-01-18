@@ -3,18 +3,36 @@
 import React from 'react'
 import { ListCheck } from 'lucide-react'
 import useEcomStore from '../../store/ecom-store'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
+import { createUserCart } from '../../api/user'
+import { toast } from 'react-toastify'
 
 const ListCart = () => {
-  const carts = useEcomStore((state) => state.carts)
-    const getTotalPrice = useEcomStore((state)=>state.getTotalPrice)
-
+  const cart = useEcomStore((state) => state.carts)
+  const user = useEcomStore((state)=>state.user)
+  const token = useEcomStore((state)=>state.token)
+  const getTotalPrice = useEcomStore((state)=>state.getTotalPrice)
+  const navigate = useNavigate()
+    console.log({cart});
+ 
+  const handleSaveCart = async()=> {
+    await createUserCart(token,{cart})
+    .then((res)=>{
+        console.log(res);
+        toast.success('บันทึกเรียบร้อย',{position: "top-center"})
+    })
+    navigate('/Checkout')
+    .catch((err)=>{
+        console.log(err);
+    })
+  }
+    
   return (
     <div className="bg-gray-200 rounded-sm p-4">
       {/* Header */}
       <div className="flex gap-4 mb-4">
         <ListCheck size={36} />
-        <p className="text-2xl font-bold">รายการสินค้า {carts.length} รายการ</p>
+        <p className="text-2xl font-bold">รายการสินค้า {cart.length} รายการ</p>
       </div>
 
       {/* List */}
@@ -22,7 +40,7 @@ const ListCart = () => {
         {/* Left */}
         <div className=' col-span-2 '>
           {/* Card */}
-          {carts.map((item, index) => (
+          {cart.map((item, index) => (
             <div key={index} className="bg-white p-2 rounded-md shadow-md mb-2">
               {/* Row 1 */}
               <div className="flex justify-between mb-2">
@@ -45,7 +63,7 @@ const ListCart = () => {
                 </div>
                 {/* Right */}
                 <div>
-                  <div className="font-bold text-blue-500">{item.price}</div>
+                  <div className="font-bold text-blue-500">{item.price * item.count}</div>
                 </div>
               </div>
             </div>
@@ -61,9 +79,22 @@ const ListCart = () => {
             </div>
 
         <div className='flex flex-col gap-2'>
-            <Link>
-            <button className='bg-red-400 w-full rounded-md text-white py-2 shadow-md hover:bg-red-500'>สั่งซื้อ</button>
+
+            {
+                user
+                ?  <Link>
+            <button
+            onClick={handleSaveCart} 
+            className='bg-red-400 w-full rounded-md text-white py-2 shadow-md hover:bg-red-500'>สั่งซื้อ</button>
             </Link>
+
+                : <Link to={'/login'}>
+            <button className='bg-blue-400 w-full rounded-md text-white py-2 shadow-md hover:bg-blue-500'>Login</button>
+            </Link>
+            }
+           
+
+            
             
             <Link to={'/shop'}>
             <button className='bg-gray-400 w-full rounded-md text-white py-2 shadow-md hover:bg-gray-500'>แก้ไขรายการ</button>
