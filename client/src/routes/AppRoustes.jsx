@@ -6,7 +6,7 @@ import Shop from '../pages/Shop'
 import Cart from '../pages/Cart'
 import History from '../pages/History'
 import Checkout from '../pages/Checkout'
-import { Login } from '../pages/auth/Login'
+import  Login  from '../pages/auth/Login'
 import { Register } from '../pages/auth/Register'
 import Layout from '../layout/Layout'
 import LayoutAdmin from '../layout/LayoutAdmin'
@@ -19,6 +19,7 @@ import HomeUser from '../pages/user/HomeUser'
 import ProtectRouteUser from './ProtectRouteUser'
 import ProtectRouteAdmin from './ProjectRouteAdmin'
 import EditProduct from '../pages/admin/Editproduct'
+import Payment from '../pages/user/Payment'
 
 const router = createBrowserRouter([
   {
@@ -49,11 +50,13 @@ const router = createBrowserRouter([
     path: '/user',
     // element: <LayoutUser />,
     element: <ProtectRouteUser element={<LayoutUser />} />,
-    children: [{ index: true, element: <HomeUser /> }],
+    children: [{ index: true, element: <HomeUser /> },
+              { path: 'payment', element: <Payment /> }
+            ],
   },
 ])
 
-const AppRoustes = () => {
+const AppRoutes = () => {
   return (
     <>
       <RouterProvider router={router} />
@@ -61,4 +64,4 @@ const AppRoustes = () => {
   )
 }
 
-export default AppRoustes
+export default AppRoutes;
