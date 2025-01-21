@@ -29,7 +29,7 @@ const MainNav = () => {
               </Link>
               
               <Link 
-                to="shop" 
+                to="/shop" 
                 className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors font-medium"
               >
                 <Store className="w-4 h-4" />
@@ -37,7 +37,7 @@ const MainNav = () => {
               </Link>
               
               <Link 
-                to="cart" 
+                to="/cart" 
                 className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors font-medium relative"
               >
                 <ShoppingCart className="w-4 h-4" />
@@ -54,7 +54,7 @@ const MainNav = () => {
           {/* Right Section - Auth Links */}
           <div className="flex items-center gap-4">
             <Link 
-              to="register" 
+              to="/register" 
               className="flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors px-4 py-2 rounded-lg hover:bg-gray-50"
             >
               <UserPlus className="w-4 h-4" />
@@ -62,7 +62,7 @@ const MainNav = () => {
             </Link>
             
             <Link 
-              to="login" 
+              to="/login" 
               className="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
             >
               <LogIn className="w-4 h-4" />

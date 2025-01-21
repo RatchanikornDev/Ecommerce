@@ -62,7 +62,20 @@ exports.userCart = async (req, res) => {
     })
     // console.log(user)
 
-    // Deleted old Cart item
+    // Check product quantity
+    for (const item of cart) {
+      const product = await prisma.product.findUnique({
+        where: { id: item.id },
+        select: { quantity: true, title: true },
+      })
+      if (!product || item.count > product.quantity) {
+        return res.status(400).json({
+          ok: false,
+          message: `ขออภัย. สินค้า ${product?.title || 'product'} หมด`,
+        })
+      }
+    }
+  
     await prisma.productOnCart.deleteMany({
       where: {
         cart: { orderedById: user.id },
@@ -201,24 +214,6 @@ exports.saveOrder = async (req, res) => {
       return res.status(400).json({ ok: false, message: 'Cart is Empty' })
     }
 
-    // Check product quantity
-    // for (const item of userCart.products) {
-    //   const product = await prisma.product.findUnique({
-    //     where: { id: item.productId },
-    //     select: { quantity: true, title: true },
-    //   })
-    //   if (!product || item.count > product.quantity) {
-    //     return res.status(400).json({
-    //       ok: false,
-    //       message: `ขออภัย. สินค้า ${product?.title || 'product'} หมด`,
-    //     })
-    //   }
-    // }
-
-    // Step 2: Calculate `amountTHB` and set currency
-    // const amountTHB = userCart.cartTotal // ใช้ cartTotal เป็นจำนวนเงินในคำสั่งซื้อ
-    // const currency = 'THB' // สกุลเงินเป็นบาทไทย
-    // const status = 'pending' // สถานะของคำสั่งซื้อ
 
     const amountTHB = Number(amount) / 100;
     // Step 3: Create a new Order

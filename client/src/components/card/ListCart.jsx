@@ -5,7 +5,9 @@ import { ListCheck } from 'lucide-react'
 import useEcomStore from '../../store/ecom-store'
 import { Link,useNavigate } from 'react-router-dom'
 import { createUserCart } from '../../api/user'
-import { toast } from 'react-toastify'
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const ListCart = () => {
   const cart = useEcomStore((state) => state.carts)
@@ -15,17 +17,17 @@ const ListCart = () => {
   const navigate = useNavigate()
     console.log({cart});
  
-  const handleSaveCart = async()=> {
-    await createUserCart(token,{cart})
-    .then((res)=>{
+    const handleSaveCart = async () => {
+      try {
+        const res = await createUserCart(token, { cart });
         console.log(res);
-        toast.success('บันทึกเรียบร้อย',{position: "top-center"})
-    })
-    navigate('/Checkout')
-    .catch((err)=>{
-        console.log(err);
-    })
-  }
+        toast.success('บันทึกเรียบร้อย', { position: "top-center" });
+        navigate('/Checkout');
+      } catch (err) {
+        console.log("err", err);
+        toast.warning(err.response.data.message);
+      }
+    };
     
   return (
     <div className="bg-gray-200 rounded-sm p-4">
