@@ -25,6 +25,7 @@
     "morgan": "^1.10.0",
     "mysql2": "^3.11.5",
     "react-toastify": "^11.0.2",
+    "stripe": "^17.5.0",
     "xxx": "^0.0.1"
   },
   "devDependencies": {

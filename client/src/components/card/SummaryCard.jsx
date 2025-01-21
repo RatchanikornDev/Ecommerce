@@ -48,8 +48,8 @@ const SummaryCard = () => {
   const hdlGoToPayment = ()=>{
     if(!addressSave)
       return toast.warning('โปรดกรอกที่อยู่')
+    navigate('/user/payment')
   }
-  navigate('/user/payment')
 
 
 console.log(products);
