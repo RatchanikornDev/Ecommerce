@@ -39,3 +39,13 @@ export const saveOrder = async (token,payload) => {
     },
   })
 }
+
+export const getOrders = async (token) => {
+  // code body
+  return axios.get('http://localhost:5500/api/user/order',
+    {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
