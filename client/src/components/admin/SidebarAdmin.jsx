@@ -1,7 +1,7 @@
 //rafce
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard,FolderKanban,LayoutList,ShoppingBasket,LogOut  } from 'lucide-react'
+import { LayoutDashboard,FolderKanban,LayoutList,ShoppingBasket,LogOut,ListOrdered  } from 'lucide-react'
 
 const SidebarAdmin = () => {
     return (
@@ -64,6 +64,18 @@ const SidebarAdmin = () => {
           >
             <ShoppingBasket className="mr-2" />
             Product
+          </NavLink>
+  
+          <NavLink
+            to="orders"
+            className={({ isActive }) =>
+              isActive
+                ? 'bg-sky-700 rounded-md text-white px-4 py-2 hover:bg-sky-700 flex items-center'
+                : 'text-sky-300 px-4 py-2 hover:bg-sky-700 hover:text-white rounded flex items-center'
+            }
+          >
+            <ListOrdered className="mr-2" />
+            Order
           </NavLink>
         </nav>
   
