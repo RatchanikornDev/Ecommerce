@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { getListAllUsers } from '../../api/admin'
 import useEcomStore from '../../store/ecom-store'
-import { dateFormat } from '../../utils/dateformat'
+import { ChangeUserStatus } from '../../api/admin'
+import { ChangeUserRole } from '../../api/admin'
+import { toast } from 'react-toastify'
 
 const TableUsers = () => {
   const token = useEcomStore((state) => state.token)
@@ -21,6 +23,39 @@ const TableUsers = () => {
         console.log(err)
       })
   }
+
+  const handleChangeUserStatus = (userId, userStatus) => {
+    console.log(userId, userStatus);
+    const value = {
+      id: userId,
+      enabled: !userStatus,
+    };
+    ChangeUserStatus(token, value)
+      .then((res) => {
+        console.log(res);
+        handleGetUsers(token);
+        toast.success("Update Status Success!!");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleChangeUserRole = (userId, userRole) => {
+    // console.log(userId, userStatus);
+    const value = {
+      id: userId,
+      role: userRole,
+    };
+    ChangeUserRole(token, value)
+      .then((res) => {
+        console.log(res);
+        handleGetUsers(token);
+        toast.success("Update Role Success!!");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  console.log(users)
+
   return (
     <div className='"container mx-auto p-6 bg-white shadow-lg rounded-md"'>
       <table className="w-full">
@@ -36,25 +71,34 @@ const TableUsers = () => {
         </thead>
 
         <tbody>
-          {users?.map((el,i)=>(
+          {users?.map((el, i) => (
             <tr key={el.id}>
-            <td>{i+1}</td>
-            <td>{el.email}</td>
-            {/* <td>{dateFormat(el.updatedAt)}</td> */}
-            <td>{el.role}</td>
-            <td>
-              {el.enabled ? 'Active' : 'Inactive'}
-            </td>
-            <td>
-              action
-            </td>
-          </tr>
-            
+              <td>{i + 1}</td>
+              <td>{el.email}</td>
+              {/* <td>{dateFormat(el.updatedAt)}</td> */}
+
+              <td>
+                <select
+                  onChange={(e) => handleChangeUserRole(el.id, e.target.value)}
+                  value={el.role}
+                >
+                  <option>user</option>
+                  <option>admin</option>
+                </select>
+              </td>
+
+              <td>{el.enabled ? 'Active' : 'Inactive'}</td>
+              <td>
+                <button
+                  className="text-white bg-blue-400 p-1 rounded-md shadow-md"
+                  onClick={() => handleChangeUserStatus(el.id, el.enabled)}
+                >
+                  {el.enabled ? 'Disable' : 'Enable'}
+                </button>
+              </td>
+            </tr>
           ))}
-          
-
         </tbody>
-
       </table>
     </div>
   )

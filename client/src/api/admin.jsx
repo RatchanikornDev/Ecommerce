@@ -33,3 +33,21 @@ export const getListAllUsers = async (token) => {
     },
   })
 }
+
+export const ChangeUserStatus = async (token,value) => {
+  //code body
+  return axios.post('http://localhost:5500/api/change-status',value, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const ChangeUserRole = async (token,value) => {
+  //code body
+  return axios.post('http://localhost:5500/api/change-role',value, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
