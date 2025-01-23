@@ -7,10 +7,11 @@ import {
 import "../stripe.css"
 import { saveOrder } from "../api/user";
 import useEcomStore from "../store/ecom-store";
-
-
+import {toast } from 'react-toastify'
+import { useNavigate } from "react-router-dom"
 
 export default function CheckoutForm() {
+  const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
 
@@ -37,18 +38,28 @@ export default function CheckoutForm() {
     redirect: 'if_required'
     });
 
+    console.log('payload',payload);
     if (payload.error) {
-      setMessage(error.message);
-    } else {
-      // create error
+      setMessage(payload.error.message);
+      console.log('error');
+      toast.error(payload.error.message)
+    } 
+    else if(payload.paymentIntent.status ==="succeeded"){
+      console.log('Ready or Saveorder');
+      //create error
       saveOrder(token,payload)
       .then((res)=>{
         console.log(res);
+        toast.success('Payment Success!!!')
+        navigate('/user/history')
       })
       .catch((err)=>{
         console.log(err);
-        
       })
+    }
+    else {
+      console.log('Something wrong!!!');
+      toast.warning('ชำระเงินไม่สำเร็จ')
     }
 
     setIsLoading(false);
