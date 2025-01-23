@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { getOrderAdmin } from '../../api/admin'
+import { getOrderAdmin , changeOrderStatus } from '../../api/admin'
 import useEcomStore from '../../store/ecom-store'
+import {toast} from 'react-toastify'
 
 export const TableOrders = () => {
   const token = useEcomStore((state) => state.token)
@@ -20,6 +21,34 @@ export const TableOrders = () => {
         console.log(err)
       })
   }
+
+const handleChangeOrderStatus = (token,orderID,orderStatus)=>{
+  //code
+  console.log(orderID,orderStatus)
+  changeOrderStatus(token,orderID,orderStatus)
+  .then((res) => {
+    console.log(res)
+    toast.success('Update Status Success!!!')
+    handleGetOrder(token)
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+}
+
+const getStatusColor = (status)=>{
+  switch (status){
+    case "Not Process":
+    return 'bg-gray-200';
+    case "Processing":
+    return 'bg-blue-200';
+    case "Completed":
+    return 'bg-green-200';
+    case "Cancel already":
+    return 'bg-red-200';
+  }
+}
+
 
   return (
     <div className="container mx-auto p-6 bg-white shadow-lg rounded-md">
@@ -58,8 +87,31 @@ export const TableOrders = () => {
                   </td>
 
                   <td>{item.cartTotal}</td>
-                  <td>{item.orderStatus}</td>
-                  <td>action</td>
+
+
+
+                  <td>
+                    <span className={` ${getStatusColor(item.orderStatus)} px-2 py-1 rounded-full` }>
+                    {item.orderStatus}
+                    </span>
+                  </td>
+                  
+                  
+      
+                  <td>
+                  <select
+                  value={item.orderStatus}
+                  onChange={(e)=>
+                    handleChangeOrderStatus(token,item.id,e.target.value)}
+                  >
+                  <option >Not Process</option>  
+                  <option >Processing</option>  
+                  <option>Completed</option>  
+                  <option>Cancel already</option>  
+                  </select>  
+                  </td>
+
+
                 </tr>
               )
             })}
