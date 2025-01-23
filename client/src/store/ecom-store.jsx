@@ -74,8 +74,10 @@ const ecomStore = (set,get) => ({
       console.log(err)
     }
   },
-})
 
+  clearCart: ()=> set ({  carts: [] })
+
+})
 const usePersist = {
   name: 'ecom-store',
   storage: createJSONStorage(() => localStorage),

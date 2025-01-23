@@ -11,6 +11,9 @@ import {toast } from 'react-toastify'
 import { useNavigate } from "react-router-dom"
 
 export default function CheckoutForm() {
+  const token = useEcomStore((state) => state.token)
+  const clearCart = useEcomStore((state) => state.clearCart)
+
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
@@ -18,7 +21,6 @@ export default function CheckoutForm() {
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const token = useEcomStore((state) => state.token)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,6 +52,7 @@ export default function CheckoutForm() {
       saveOrder(token,payload)
       .then((res)=>{
         console.log(res);
+        clearCart()
         toast.success('Payment Success!!!')
         navigate('/user/history')
       })

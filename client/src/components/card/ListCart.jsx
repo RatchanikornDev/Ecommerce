@@ -86,6 +86,7 @@ const ListCart = () => {
                 user
                 ?  <Link>
             <button
+            disabled={cart.length < 1 }
             onClick={handleSaveCart} 
             className='bg-red-400 w-full rounded-md text-white py-2 shadow-md hover:bg-red-500'>สั่งซื้อ</button>
             </Link>
