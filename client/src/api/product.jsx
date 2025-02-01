@@ -77,3 +77,12 @@ export const SearchFilters = async (arg) => {
   // code body
   return axios.post('http://localhost:5500/api/search/filters/', arg)
 }
+
+export const listProductBy = async (sort, order, limit) => {
+  // code body
+  return axios.post('http://localhost:5500/api/productby', {
+    sort,
+    order,
+    limit,
+  })
+}
