@@ -62,6 +62,7 @@ const FormProduct = () => {
       try {
         // เรียกใช้ API เพื่อลบสินค้า
         const res = await deleteProduct(token, id)
+        console.log(res);
         toast.success('ลบสินค้าเรียบร้อยแล้ว') // แสดงข้อความแจ้งเตือน
         getProduct() // อัปเดตข้อมูลสินค้า
       } catch (err) {
