@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
@@ -29,19 +29,23 @@ export const Register = () => {
     resolver: zodResolver(registerSchema),
   })
 
-  const passwordStrength = zxcvbn(watch('password') || '')
+  const [passwordScore, setPasswordScore] = useState(0)
+
+  const validatePassword = () => {
+    let password = watch().password
+    return zxcvbn(password ? password : '').score
+  }
+
+  useEffect(() => {
+    setPasswordScore(validatePassword())
+  }, [watch().password])
 
   const onSubmit = async (data) => {
-    const passwordScore = zxcvbn(data.password).score
-    if(passwordScore < 3){
-      toast.warning('รหัสผ่านไม่ปลอดภัย กรุณาเปลี่ยนรหัสผ่านใหม่')
-      return
-    }
     try {
       const res = await axios.post('http://localhost:5500/api/register', data)
       toast.success('ลงทะเบียนสำเร็จ!')
       console.log(res.data)
-      reset() // รีเซ็ตฟอร์มหลังจากลงทะเบียนสำเร็จ
+      reset()
     } catch (err) {
       const errMsg = err.response?.data?.message || 'เกิดข้อผิดพลาดในการลงทะเบียน'
       toast.error(errMsg)
@@ -49,11 +53,14 @@ export const Register = () => {
     }
   }
 
+  const tam = Array.from('tammmm')
+    console.log(tam);
+    
+
   return (
     <div className="max-w-md mx-auto p-4 border rounded-md shadow-md">
       <h2 className="text-xl font-bold text-center mb-4">สมัครสมาชิก</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Email */}
         <div>
           <label>Email</label>
           <input
@@ -65,7 +72,6 @@ export const Register = () => {
           {errors.email && <p className="text-red-500">{errors.email.message}</p>}
         </div>
 
-        {/* Password */}
         <div>
           <label>Password</label>
           <input
@@ -76,19 +82,17 @@ export const Register = () => {
           />
           {errors.password && <p className="text-red-500">{errors.password.message}</p>}
 
-          {/* แสดงความแข็งแรงของรหัสผ่าน */}
           {watch('password') && (
             <p
               className={`mt-1 text-sm ${
-                passwordStrength.score < 3 ? 'text-red-500' : 'text-green-500'
+                passwordScore < 3 ? 'text-red-500' : 'text-green-500'
               }`}
             >
-              ความแข็งแรงของรหัสผ่าน: {passwordStrength.score}/4
+              ความแข็งแรงของรหัสผ่าน: {passwordScore}/4
             </p>
           )}
         </div>
 
-        {/* Confirm Password */}
         <div>
           <label>Confirm Password</label>
           <input
@@ -102,7 +106,6 @@ export const Register = () => {
           )}
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded-md w-full hover:bg-blue-600"
